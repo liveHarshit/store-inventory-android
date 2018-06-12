@@ -24,6 +24,11 @@
             android:label="Add a product"
             android:parentActivityName=".CatalogActivity">
         </activity>
+        <provider
+            android:authorities="com.example.liveharshit.storeinventory"
+            android:name=".data.StoreProvider"
+            android:exported="false">
+        </provider>
     </application>
 
 </manifest>
