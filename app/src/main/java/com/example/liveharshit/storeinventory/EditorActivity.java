@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,4 +71,9 @@ public class EditorActivity extends AppCompatActivity {
         quantityTextView.setText("" + number);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.editor_menu,menu);
+        return true;
+    }
 }
