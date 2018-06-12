@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Store Inventory</string>
+    <string name="product_name">Product name</string>
+    <string name="available_quantity">Available Quantity:</string>
 </resources>
