@@ -1,6 +1,7 @@
 package com.example.liveharshit.storeinventory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -55,16 +56,26 @@ public class StoreCursorAdapter extends CursorAdapter {
         categoryTextView.setText(category);
 
         int currentItemId = cursor.getInt(cursor.getColumnIndex(StoreContract.StoreEntry._ID));
-        String id = Integer.toString(currentItemId);
-        final Uri currentProducturi = Uri.withAppendedPath(StoreContract.StoreEntry.CONTENT_URI,id);
+        final String id = Integer.toString(currentItemId);
+        final Uri currentProductUri = Uri.withAppendedPath(StoreContract.StoreEntry.CONTENT_URI,id);
 
         ImageView deleteImageView = (ImageView)view.findViewById(R.id.delete_product);
         deleteImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Currend product uri",currentProducturi.toString());
+                Log.e("Currend product uri",currentProductUri.toString());
                 Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
-                context.getContentResolver().delete(currentProducturi,null,null);
+                context.getContentResolver().delete(currentProductUri,null,null);
+            }
+        });
+
+        ImageView editImageView = (ImageView) view.findViewById(R.id.edit_product);
+        editImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,EditorActivity.class);
+                intent.setData(currentProductUri);
+                context.startActivity(intent);
             }
         });
     }

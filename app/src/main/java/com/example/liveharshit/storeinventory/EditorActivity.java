@@ -1,8 +1,11 @@
 package com.example.liveharshit.storeinventory;
 
 import android.Manifest;
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +27,7 @@ import com.example.liveharshit.storeinventory.data.StoreContract;
 
 import java.io.ByteArrayOutputStream;
 
-public class EditorActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static int RESULT_LOAD_IMAGE = 1;
     private ImageView addImageView;
     private int quantity = 0;
@@ -32,12 +35,25 @@ public class EditorActivity extends AppCompatActivity {
     private EditText nameEditText;
     private EditText priceEditText;
     private EditText categoryEditText;
+    private Uri currentProductUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        Intent intent = getIntent();
+        currentProductUri = intent.getData();
+
+        if (currentProductUri==null) {
+            setTitle("Add a product");
+        } else {
+            setTitle("Edit this product");
+            getLoaderManager().initLoader(0,null,this);
+        }
+
         int REQUEST_CODE = 0;
+        quantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         addImageView = (ImageView)findViewById(R.id.add_image);
         addImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +98,6 @@ public class EditorActivity extends AppCompatActivity {
         display(quantity);
     }
     private void display(int number) {
-        quantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + number);
     }
 
@@ -142,5 +157,43 @@ public class EditorActivity extends AppCompatActivity {
         }
 
         return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String [] project = {StoreContract.StoreEntry._ID, StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE, StoreContract.StoreEntry.COLUMN_PRODUCT_NAME,  StoreContract.StoreEntry.COLUMN_AVAILABLE_QUANTITY,StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE, StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY};
+        return new CursorLoader(this,currentProductUri,project,null,null,null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data.moveToFirst()) {
+            byte[] imageBytes = data.getBlob(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE));
+            Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            String name = data.getString(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME));
+            int quantity = data.getInt(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_AVAILABLE_QUANTITY));
+            String quantityString = Integer.toString(quantity);
+            int price = data.getInt(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE));
+            String priceString = Integer.toString(price);
+            String category = data.getString(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY));
+
+
+            addImageView.setImageBitmap(imageBitmap);
+            nameEditText.setText(name);
+            quantityTextView.setText(quantityString);
+            priceEditText.setText(priceString);
+            categoryEditText.setText(category);
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        addImageView.setImageBitmap(null);
+        nameEditText.setText("");
+        quantityTextView.setText("");
+        priceEditText.setText("");
+        priceEditText.setText("");
+        categoryEditText.setText("");
     }
 }
