@@ -107,7 +107,7 @@ public class EditorActivity extends AppCompatActivity {
         Bitmap imageBitmap = ((BitmapDrawable) addImageView.getDrawable()).getBitmap();
         Bitmap reducedBitmap = getResizedBitmap(imageBitmap,1024);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        reducedBitmap.compress(Bitmap.CompressFormat.PNG, 20, stream);
+        reducedBitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         byte[] image = stream.toByteArray();
         String name = nameEditText.getText().toString().trim();
         String stringQuantity = quantityTextView.getText().toString().trim();
@@ -128,7 +128,7 @@ public class EditorActivity extends AppCompatActivity {
 
     }
 
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+    private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
 

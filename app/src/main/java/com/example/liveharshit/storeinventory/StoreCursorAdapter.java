@@ -45,6 +45,7 @@ public class StoreCursorAdapter extends CursorAdapter {
         quantityTextView.setText(availableQuantity);
 
         String price = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE));
+        price ="₹" +  price;
         priceTextView.setText(price);
 
         String category = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY));
