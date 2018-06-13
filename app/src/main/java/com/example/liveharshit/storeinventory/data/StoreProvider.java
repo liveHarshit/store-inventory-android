@@ -72,7 +72,24 @@ public class StoreProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase sqLiteDatabase = mDbHelper.getWritableDatabase();
+        int deletedRaw = 0;
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCT:
+                deletedRaw = sqLiteDatabase.delete(StoreContract.StoreEntry.TABLE_NAME,null,null);
+                break;
+            case PRODUCT_ID:
+                selection = StoreContract.StoreEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                deletedRaw = sqLiteDatabase.delete(StoreContract.StoreEntry.TABLE_NAME,selection,selectionArgs);
+        }
+
+        if (deletedRaw!=0) {
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
+
+        return deletedRaw;
     }
 
     @Override

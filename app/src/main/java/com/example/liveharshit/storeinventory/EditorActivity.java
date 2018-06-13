@@ -105,7 +105,7 @@ public class EditorActivity extends AppCompatActivity {
 
     private void insertProduct() {
         Bitmap imageBitmap = ((BitmapDrawable) addImageView.getDrawable()).getBitmap();
-        Bitmap reducedBitmap = getResizedBitmap(imageBitmap,1024);
+        Bitmap reducedBitmap = getResizedBitmap(imageBitmap,512);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         reducedBitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         byte[] image = stream.toByteArray();

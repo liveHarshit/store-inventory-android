@@ -92,7 +92,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     private void insertDummyData() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.sample_product);
-        Bitmap reducedBitmap = getResizedBitmap(bitmap,1024);
+        Bitmap reducedBitmap = getResizedBitmap(bitmap,512);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         reducedBitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         byte[] image = stream.toByteArray();
