@@ -1,6 +1,8 @@
 package com.example.liveharshit.storeinventory;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -63,9 +65,24 @@ public class StoreCursorAdapter extends CursorAdapter {
         deleteImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Currend product uri",currentProductUri.toString());
-                Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
-                context.getContentResolver().delete(currentProductUri,null,null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage(R.string.delete_this_item);
+                builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.getContentResolver().delete(currentProductUri,null,null);
+                    }
+                });
+                builder.setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(dialog!=null) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
 

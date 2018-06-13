@@ -2,4 +2,13 @@
     <string name="app_name">Store Inventory</string>
     <string name="product_name">Product name</string>
     <string name="available_quantity">Available Quantity:</string>
+    <string name="delete_all_dialog">Are you sure to want to delete all products?</string>
+    <string name="delete_all">Delete all</string>
+    <string name="delete">Delete</string>
+    <string name="delete_this_item">Delete this product?</string>
+    <string name="cancel">Cancel</string>
+    <string name="exit_without_saving">Exit without saving?</string>
+    <string name="discard_changes">Discard changes</string>
+    <string name="stay_here">Stay here</string>
+
 </resources>

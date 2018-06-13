@@ -2,9 +2,11 @@ package com.example.liveharshit.storeinventory;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
@@ -87,10 +89,32 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 insertDummyData();
                 return true;
             case R.id.action_delete_all_data:
-                getContentResolver().delete(StoreContract.StoreEntry.CONTENT_URI,null,null);
+                showDeleteConformingDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteConformingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.delete_all_dialog));
+        builder.setNegativeButton(R.string.delete_all, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getContentResolver().delete(StoreContract.StoreEntry.CONTENT_URI,null,null);
+
+            }
+        });
+        builder.setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(dialog!=null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void insertDummyData() {

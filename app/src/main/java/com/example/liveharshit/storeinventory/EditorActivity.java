@@ -1,9 +1,11 @@
 package com.example.liveharshit.storeinventory;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -13,15 +15,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.liveharshit.storeinventory.data.StoreContract;
 
@@ -30,12 +35,21 @@ import java.io.ByteArrayOutputStream;
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static int RESULT_LOAD_IMAGE = 1;
     private ImageView addImageView;
-    private int quantity = 0;
+    private int quantity;
     private TextView quantityTextView;
     private EditText nameEditText;
     private EditText priceEditText;
     private EditText categoryEditText;
     private Uri currentProductUri;
+    private boolean hasProductChanged = false;
+
+    private View.OnTouchListener touchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            hasProductChanged = true;
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +81,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
          priceEditText = (EditText)findViewById(R.id.product_price);
          categoryEditText = (EditText)findViewById(R.id.product_category);
 
+         addImageView.setOnTouchListener(touchListener);
+         nameEditText.setOnTouchListener(touchListener);
+         priceEditText.setOnTouchListener(touchListener);
+         categoryEditText.setOnTouchListener(touchListener);
     }
 
     @Override
@@ -113,6 +131,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_save:
                 insertProduct();
                 finish();
+                return true;
+            case android.R.id.home:
+                if(!hasProductChanged) {
+                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    return true;
+                }
+                showDiscardAlertDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -200,5 +225,32 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         priceEditText.setText("");
         priceEditText.setText("");
         categoryEditText.setText("");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!hasProductChanged) {
+            super.onBackPressed();
+        }
+        showDiscardAlertDialog();
+    }
+
+    private void showDiscardAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.exit_without_saving);
+        builder.setNegativeButton(R.string.discard_changes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setPositiveButton(R.string.stay_here, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
