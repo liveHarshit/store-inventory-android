@@ -1,13 +1,19 @@
 package com.example.liveharshit.storeinventory;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +25,12 @@ import android.widget.Toast;
 
 import com.example.liveharshit.storeinventory.data.StoreContract;
 
+import java.io.ByteArrayOutputStream;
 import java.util.zip.Inflater;
+
+import static android.support.v4.app.ActivityCompat.requestPermissions;
+import static android.support.v4.app.ActivityCompat.shouldShowRequestPermissionRationale;
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 public class StoreCursorAdapter extends CursorAdapter {
 
@@ -41,10 +52,10 @@ public class StoreCursorAdapter extends CursorAdapter {
         TextView categoryTextView = (TextView)view.findViewById(R.id.category_text_view);
 
         byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE));
-        Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0,imageBytes.length);
+        final Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0,imageBytes.length);
         imageView.setImageBitmap(imageBitmap);
 
-        String productName = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME));
+        final String productName = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME));
         nameTextView.setText(productName);
 
         String availableQuantity = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_AVAILABLE_QUANTITY));
@@ -54,7 +65,7 @@ public class StoreCursorAdapter extends CursorAdapter {
         price ="₹" +  price;
         priceTextView.setText(price);
 
-        String category = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY));
+        final String category = cursor.getString(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY));
         categoryTextView.setText(category);
 
         int currentItemId = cursor.getInt(cursor.getColumnIndex(StoreContract.StoreEntry._ID));
@@ -95,5 +106,31 @@ public class StoreCursorAdapter extends CursorAdapter {
                 context.startActivity(intent);
             }
         });
+
+        final String SEND_TEXT = productName + "\n" + "Price: " + price + "\n" + "Available quantity: " + availableQuantity + "\nType: " + category;
+
+
+        ImageView shareImageView = (ImageView)view.findViewById(R.id.share_product);
+        shareImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri imageUri = getImageUri(context,imageBitmap);
+                Log.e("Image uri",imageUri.toString());
+                Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_TEXT, SEND_TEXT);
+                intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    private Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 }
