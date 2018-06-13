@@ -105,8 +105,9 @@ public class EditorActivity extends AppCompatActivity {
 
     private void insertProduct() {
         Bitmap imageBitmap = ((BitmapDrawable) addImageView.getDrawable()).getBitmap();
+        Bitmap reducedBitmap = getResizedBitmap(imageBitmap,1024);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        reducedBitmap.compress(Bitmap.CompressFormat.PNG, 20, stream);
         byte[] image = stream.toByteArray();
         String name = nameEditText.getText().toString().trim();
         String stringQuantity = quantityTextView.getText().toString().trim();
@@ -125,5 +126,21 @@ public class EditorActivity extends AppCompatActivity {
 
         getContentResolver().insert(StoreContract.StoreEntry.CONTENT_URI,values);
 
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 }

@@ -21,7 +21,7 @@ import android.widget.ListView;
 import com.example.liveharshit.storeinventory.data.StoreContract;
 
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-    public static final int PRODUCT_LOADER =1;
+    public static final int PRODUCT_LOADER =0;
     private StoreCursorAdapter cursorAdapter;
     int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 
@@ -63,13 +63,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         getLoaderManager().initLoader(PRODUCT_LOADER,null,this);
 
-        /*String [] projection = {StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE};
-        Cursor cursor = getContentResolver().query(StoreContract.StoreEntry.CONTENT_URI,projection,null,null,null);
-        cursor.moveToFirst();
-        byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE));
-        Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0,imageBytes.length);
-        ImageView extraImageView = (ImageView)findViewById(R.id.extra_image_view);
-        extraImageView.setImageBitmap(imageBitmap);*/
+
     }
 
     @Override

@@ -45,6 +45,7 @@ public class StoreProvider extends ContentProvider {
                 cursor = sqLiteDatabase.query(StoreContract.StoreEntry.TABLE_NAME,null,s,selectionArg,null,null,null);
                 break;
         }
+        cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return cursor;
     }
 
@@ -65,6 +66,7 @@ public class StoreProvider extends ContentProvider {
                 newRawId = sqLiteDatabase.insert(StoreContract.StoreEntry.TABLE_NAME,null,values);
                 break;
         }
+        getContext().getContentResolver().notifyChange(uri,null);
         return ContentUris.withAppendedId(uri,newRawId);
     }
 
