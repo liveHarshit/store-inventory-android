@@ -86,6 +86,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             case R.id.action_insert_dummy_data :
                 insertDummyData();
                 return true;
+            case R.id.action_delete_all_data:
+                getContentResolver().delete(StoreContract.StoreEntry.CONTENT_URI,null,null);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

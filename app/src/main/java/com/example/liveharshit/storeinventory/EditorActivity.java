@@ -139,7 +139,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE,price);
         values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY,category);
 
-        getContentResolver().insert(StoreContract.StoreEntry.CONTENT_URI,values);
+        if(currentProductUri==null) {
+
+            getContentResolver().insert(StoreContract.StoreEntry.CONTENT_URI, values);
+        } else {
+            getContentResolver().update(currentProductUri,values,null,null);
+        }
 
     }
 
