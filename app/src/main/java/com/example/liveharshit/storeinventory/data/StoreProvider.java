@@ -95,7 +95,18 @@ public class StoreProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        int rawId =  database.update(StoreContract.StoreEntry.TABLE_NAME,values,selection,selectionArgs);
+        int match = sUriMatcher.match(uri);
+        int rawId = 0;
+        switch (match) {
+            case PRODUCT:
+                rawId =  database.update(StoreContract.StoreEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            case PRODUCT_ID:
+                String s = StoreContract.StoreEntry._ID + "=?";
+                String [] selectionArg = {String.valueOf(ContentUris.parseId(uri))};
+                rawId =  database.update(StoreContract.StoreEntry.TABLE_NAME,values,s,selectionArg);
+
+        }
 
         if(rawId!=0) {
             getContext().getContentResolver().notifyChange(uri,null);
