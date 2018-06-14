@@ -130,7 +130,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         switch (item.getItemId()) {
             case R.id.action_save:
                 insertProduct();
-                finish();
                 return true;
             case android.R.id.home:
                 if(!hasProductChanged) {
@@ -149,26 +148,36 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         reducedBitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         byte[] image = stream.toByteArray();
+
         String name = nameEditText.getText().toString().trim();
         String stringQuantity = quantityTextView.getText().toString().trim();
-        int quantity = Integer.parseInt(stringQuantity);
-        String stringPrice  = priceEditText.getText().toString().trim();
-        int price = Integer.parseInt(stringPrice);
+        String stringPrice = priceEditText.getText().toString().trim();
         String category = categoryEditText.getText().toString().trim();
 
+        if(name.isEmpty()&&stringPrice.isEmpty()&&category.isEmpty()) {
+            Toast.makeText(this, "Please enter all information...", Toast.LENGTH_SHORT).show();
 
-        ContentValues values = new ContentValues();
-        values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE,image);
-        values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME,name);
-        values.put(StoreContract.StoreEntry.COLUMN_AVAILABLE_QUANTITY,quantity);
-        values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE,price);
-        values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY,category);
-
-        if(currentProductUri==null) {
-
-            getContentResolver().insert(StoreContract.StoreEntry.CONTENT_URI, values);
+        } else if (stringQuantity.equals("0")) {
+            Toast.makeText(this, "Please increase quantity", Toast.LENGTH_SHORT).show();
         } else {
-            getContentResolver().update(currentProductUri,values,null,null);
+
+            int quantity = Integer.parseInt(stringQuantity);
+            int price = Integer.parseInt(stringPrice);
+
+            ContentValues values = new ContentValues();
+            values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE, image);
+            values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME, name);
+            values.put(StoreContract.StoreEntry.COLUMN_AVAILABLE_QUANTITY, quantity);
+            values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE, price);
+            values.put(StoreContract.StoreEntry.COLUMN_PRODUCT_CATEGORY, category);
+
+            if (currentProductUri == null) {
+
+                getContentResolver().insert(StoreContract.StoreEntry.CONTENT_URI, values);
+            } else {
+                getContentResolver().update(currentProductUri, values, null, null);
+            }
+            finish();
         }
 
     }
