@@ -35,7 +35,7 @@ import java.io.ByteArrayOutputStream;
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static int RESULT_LOAD_IMAGE = 1;
     private ImageView addImageView;
-    private int quantity;
+    private int quantity=0;
     private TextView quantityTextView;
     private EditText nameEditText;
     private EditText priceEditText;
@@ -62,6 +62,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (currentProductUri==null) {
             setTitle("Add a product");
         } else {
+
             setTitle("Edit this product");
             getLoaderManager().initLoader(0,null,this);
         }
@@ -116,7 +117,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         display(quantity);
     }
     private void display(int number) {
-        quantityTextView.setText("" + number);
+        quantityTextView.setText(Integer.toString(number));
     }
 
     @Override
@@ -210,7 +211,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             byte[] imageBytes = data.getBlob(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_IMAGE));
             Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             String name = data.getString(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_NAME));
-            int quantity = data.getInt(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_AVAILABLE_QUANTITY));
+            quantity = data.getInt(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_AVAILABLE_QUANTITY));
             String quantityString = Integer.toString(quantity);
             int price = data.getInt(data.getColumnIndex(StoreContract.StoreEntry.COLUMN_PRODUCT_PRICE));
             String priceString = Integer.toString(price);
