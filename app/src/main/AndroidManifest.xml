@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditorActivity"
+            android:theme="@style/EditorTheme"
             android:parentActivityName=".CatalogActivity">
         </activity>
         <provider

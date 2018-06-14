@@ -116,8 +116,6 @@ public class StoreCursorAdapter extends CursorAdapter {
             public void onClick(View v) {
 
                 Uri imageUri = getImageUri(context,imageBitmap);
-                Log.e("Image uri",imageUri.toString());
-                Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_TEXT, SEND_TEXT);

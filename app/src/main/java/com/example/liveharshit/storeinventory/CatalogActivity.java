@@ -71,6 +71,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         cursorAdapter = new StoreCursorAdapter(this,null);
         listView.setAdapter(cursorAdapter);
 
+        View emptyView = (View)findViewById(R.id.empty_view);
+        listView.setEmptyView(emptyView);
+
         getLoaderManager().initLoader(PRODUCT_LOADER,null,this);
 
 
@@ -119,7 +122,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     private void insertDummyData() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.sample_product);
-        Bitmap reducedBitmap = getResizedBitmap(bitmap,512);
+        Bitmap reducedBitmap = getResizedBitmap(bitmap,1024);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         reducedBitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         byte[] image = stream.toByteArray();

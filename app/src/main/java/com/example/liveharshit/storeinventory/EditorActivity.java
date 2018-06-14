@@ -145,7 +145,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private void insertProduct() {
         Bitmap imageBitmap = ((BitmapDrawable) addImageView.getDrawable()).getBitmap();
-        Bitmap reducedBitmap = getResizedBitmap(imageBitmap,512);
+        Bitmap reducedBitmap = getResizedBitmap(imageBitmap,1024);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         reducedBitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         byte[] image = stream.toByteArray();
