@@ -1,4 +1,4 @@
-# store-inventory-android
+# Store Inventory Android
 #### SQLite database used to store product details.
 
 ### Screenshots of a sample Android app:
